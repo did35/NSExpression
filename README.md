@@ -44,8 +44,64 @@ if let result = expression.expressionValue(with: nil, context: nil) as? Double {
     print("Invalid expression")
 }
 ```
+### Breakdown of the Statement
+
+1. **expression.expressionValue(with:context:)**
+   - This method evaluates the `NSExpression` object and returns the result.
+   - The `with` parameter can be used to pass in a dictionary of variables, which is `nil` in this case since no variables are being used.
+   - The `context` parameter can provide additional evaluation context, also `nil` here.
+
+2. **as? Double**
+   - The `as?` keyword is used for conditional casting in Swift.
+   - It attempts to cast the result of `expressionValue(with:context:)` to a `Double`.
+
+3. **if let result = ...**
+   - This is optional binding in Swift.
+   - It tries to safely unwrap the optional result of the casting operation.
+
+### What Does it Do?
+
+When `expression.expressionValue(with: nil, context: nil)` is called, it evaluates the mathematical expression and returns the result. The return type of this method is `Any?`, which means it can be any type or `nil`.
+
+To use this result as a `Double` (a numeric type), we need to cast it. However, because the result could be `nil` or not a `Double`, we use optional casting with `as?`.
+
+- **`as?`**: This tries to cast the value to the specified type (`Double` in this case). If the cast is successful, it returns the value as an optional (`Double?`). If the cast fails (e.g., the result is not a `Double`), it returns `nil`.
+
+### Explanation with an Example
+
+Here's an example to illustrate this:
+
+```swift
+import Foundation
+
+let expressionString = "5 + 3 * 2"
+let expression = NSExpression(format: expressionString)
+
+// Evaluating the expression
+let evaluatedValue = expression.expressionValue(with: nil, context: nil)
+
+// Attempting to cast the evaluated value to Double
+if let result = evaluatedValue as? Double {
+    print("Result: \(result)")  // Output: Result: 11.0
+} else {
+    print("Invalid expression or non-numeric result")
+}
+```
+
+- **Evaluating the Expression**: The `expressionValue(with:context:)` method evaluates the expression `5 + 3 * 2` and returns the result. In this case, it should return `11` as an `NSNumber` (which can hold various numeric types including `Double`).
+- **Conditional Casting**: `as? Double` attempts to cast the evaluated result to a `Double`.
+  - If the result is indeed a `Double` (or can be represented as one), the cast succeeds, and the `if let` statement binds the unwrapped `Double` value to `result`.
+  - If the result cannot be cast to a `Double` (e.g., it's a string or another type), the cast fails, and `result` is `nil`.
 
 ### Summary
+
+- **Purpose**: The `if let result = ... as? Double` statement ensures that the result of the expression evaluation is a `Double` and safely unwraps it.
+- **Safety**: This approach prevents runtime errors that would occur if you tried to use a value of an incorrect type.
+- **Optional Binding**: By using optional binding with `if let`, you can handle the case where the expression evaluation does not produce a numeric result.
+
+This ensures that your application gracefully handles cases where the expression might be invalid or not produce a numeric result, improving robustness and user experience.
+
+### NSExpression & NextStep
 
 - **NSExpression** is a powerful class introduced by Apple to represent and evaluate expressions in macOS and iOS applications.
 - The "NS" prefix stands for **NextStep**, reflecting the historical origins of the technology within NeXT Inc. and its subsequent integration into Apple's ecosystem.
